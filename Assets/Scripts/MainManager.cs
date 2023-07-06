@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,14 +12,19 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text NameAndSBS;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
     
     private bool m_GameOver = false;
+    public void ShowNameAndBestScore()
+    {
+        if(dataPersister.Instance != null)
+            NameAndSBS.text = "Name: " + dataPersister.Instance.pName + " Best Score: " + dataPersister.Instance.bestScore;
+    }
 
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +42,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        ShowNameAndBestScore();
     }
 
     private void Update()
@@ -55,6 +62,7 @@ public class MainManager : MonoBehaviour
         }
         else if (m_GameOver)
         {
+            saveBestScore();
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -73,4 +81,17 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
+
+    public void getBestScore()
+    {
+        //get the best score that is written in name of the player
+    }
+
+   
+    public void saveBestScore()
+    {
+        dataPersister.Instance.bestScore = m_Points;
+    }
+
+
 }
